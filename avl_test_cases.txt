@@ -1,0 +1,55 @@
+Cases:
+  20+       20+           __20+__
+ /         /  \          /       \
+4         4    26       4         26
+         / \           / \       /  \
+        3   9         3+  9    21    30
+                     /   / \
+                    2   7   11
+                    
+Case 1:
+i20 i4 p
+
+Case 2:
+i20 i4 i26 i3 i9 p
+
+Case 3:
+i20 i4 i26 i3 i9 i21 i30 i2 i7 i11 p
+
+1a insert 15:
+i20 i4 i15 p
+
+2a insert 15:
+i20 i4 i26 i3 i9 i15 p
+
+3a insert 15:
+i20 i4 i26 i3 i9 i21 i30 i2 i7 i11 i15 p
+
+1b insert 8:
+i20 i4 i8 p
+
+2b insert 8:
+i20 i4 i26 i3 i9 i8 p
+
+3b insert 8:
+i20 i4 i26 i3 i9 i21 i30 i2 i7 i11 i8 p
+
+delete cases
+  2            ___6___               ___5___
+ / \          /       \             /       \
+1   4        2         9           2         8
+   / \      / \       / \         / \       / \
+  3   5    1   4     8   12      1   3     7  10
+              / \   /   / \           \   /   / \
+             3   5 7   11  13          4 6   9   11
+                            \                     \
+                             14                    12
+                             
+Case 1:
+i2 i1 i4 i3 i5 d1 p
+
+case 2:
+i6 i2 i9 i1 i4 i8 i12 i3 i5 i7 i11 i12 i13 i14 d1 p
+
+case 3:
+i5 i2 i8 i1 i3 i7 i10 i4 i6 i9 i11 i12 d1 p
