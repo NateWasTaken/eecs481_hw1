@@ -501,17 +501,17 @@
         -:  499: * transformations is significant.
         -:  500: */
         -:  501:void /* PRIVATE */
-     1425:  502:png_do_write_transformations(png_structrp png_ptr, png_row_infop row_info)
+   132570:  502:png_do_write_transformations(png_structrp png_ptr, png_row_infop row_info)
         -:  503:{
         -:  504:   png_debug(1, "in png_do_write_transformations");
         -:  505:
-     1425:  506:   if (png_ptr == NULL)
+   132570:  506:   if (png_ptr == NULL)
     #####:  507:      return;
         -:  508:
         -:  509:#ifdef PNG_WRITE_USER_TRANSFORM_SUPPORTED
-     1425:  510:   if ((png_ptr->transformations & PNG_USER_TRANSFORM) != 0)
-     1425:  511:      if (png_ptr->write_user_transform_fn != NULL)
-     2850:  512:         (*(png_ptr->write_user_transform_fn)) /* User write transform
+   132570:  510:   if ((png_ptr->transformations & PNG_USER_TRANSFORM) != 0)
+   132570:  511:      if (png_ptr->write_user_transform_fn != NULL)
+   265140:  512:         (*(png_ptr->write_user_transform_fn)) /* User write transform
         -:  513:                                                 function */
         -:  514:             (png_ptr,  /* png_ptr */
         -:  515:             row_info,  /* row_info: */
@@ -521,56 +521,56 @@
         -:  519:                /*  png_byte bit_depth;      bit depth of samples */
         -:  520:                /*  png_byte channels;       number of channels (1-4) */
         -:  521:                /*  png_byte pixel_depth;    bits per pixel (depth*channels) */
-     1425:  522:             png_ptr->row_buf + 1);      /* start of pixel data for row */
+   132570:  522:             png_ptr->row_buf + 1);      /* start of pixel data for row */
         -:  523:#endif
         -:  524:
         -:  525:#ifdef PNG_WRITE_FILLER_SUPPORTED
-     1425:  526:   if ((png_ptr->transformations & PNG_FILLER) != 0)
+   132570:  526:   if ((png_ptr->transformations & PNG_FILLER) != 0)
     #####:  527:      png_do_strip_channel(row_info, png_ptr->row_buf + 1,
     #####:  528:          !(png_ptr->flags & PNG_FLAG_FILLER_AFTER));
         -:  529:#endif
         -:  530:
         -:  531:#ifdef PNG_WRITE_PACKSWAP_SUPPORTED
-     1425:  532:   if ((png_ptr->transformations & PNG_PACKSWAP) != 0)
+   132570:  532:   if ((png_ptr->transformations & PNG_PACKSWAP) != 0)
     #####:  533:      png_do_packswap(row_info, png_ptr->row_buf + 1);
         -:  534:#endif
         -:  535:
         -:  536:#ifdef PNG_WRITE_PACK_SUPPORTED
-     1425:  537:   if ((png_ptr->transformations & PNG_PACK) != 0)
+   132570:  537:   if ((png_ptr->transformations & PNG_PACK) != 0)
     #####:  538:      png_do_pack(row_info, png_ptr->row_buf + 1,
     #####:  539:          (png_uint_32)png_ptr->bit_depth);
         -:  540:#endif
         -:  541:
         -:  542:#ifdef PNG_WRITE_SWAP_SUPPORTED
         -:  543:#  ifdef PNG_16BIT_SUPPORTED
-     1425:  544:   if ((png_ptr->transformations & PNG_SWAP_BYTES) != 0)
+   132570:  544:   if ((png_ptr->transformations & PNG_SWAP_BYTES) != 0)
     #####:  545:      png_do_swap(row_info, png_ptr->row_buf + 1);
         -:  546:#  endif
         -:  547:#endif
         -:  548:
         -:  549:#ifdef PNG_WRITE_SHIFT_SUPPORTED
-     1425:  550:   if ((png_ptr->transformations & PNG_SHIFT) != 0)
+   132570:  550:   if ((png_ptr->transformations & PNG_SHIFT) != 0)
     #####:  551:      png_do_shift(row_info, png_ptr->row_buf + 1,
     #####:  552:           &(png_ptr->shift));
         -:  553:#endif
         -:  554:
         -:  555:#ifdef PNG_WRITE_SWAP_ALPHA_SUPPORTED
-     1425:  556:   if ((png_ptr->transformations & PNG_SWAP_ALPHA) != 0)
+   132570:  556:   if ((png_ptr->transformations & PNG_SWAP_ALPHA) != 0)
     #####:  557:      png_do_write_swap_alpha(row_info, png_ptr->row_buf + 1);
         -:  558:#endif
         -:  559:
         -:  560:#ifdef PNG_WRITE_INVERT_ALPHA_SUPPORTED
-     1425:  561:   if ((png_ptr->transformations & PNG_INVERT_ALPHA) != 0)
+   132570:  561:   if ((png_ptr->transformations & PNG_INVERT_ALPHA) != 0)
     #####:  562:      png_do_write_invert_alpha(row_info, png_ptr->row_buf + 1);
         -:  563:#endif
         -:  564:
         -:  565:#ifdef PNG_WRITE_BGR_SUPPORTED
-     1425:  566:   if ((png_ptr->transformations & PNG_BGR) != 0)
+   132570:  566:   if ((png_ptr->transformations & PNG_BGR) != 0)
     #####:  567:      png_do_bgr(row_info, png_ptr->row_buf + 1);
         -:  568:#endif
         -:  569:
         -:  570:#ifdef PNG_WRITE_INVERT_SUPPORTED
-     1425:  571:   if ((png_ptr->transformations & PNG_INVERT_MONO) != 0)
+   132570:  571:   if ((png_ptr->transformations & PNG_INVERT_MONO) != 0)
     #####:  572:      png_do_invert(row_info, png_ptr->row_buf + 1);
         -:  573:#endif
         -:  574:}

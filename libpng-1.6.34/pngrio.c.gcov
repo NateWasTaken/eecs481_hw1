@@ -31,16 +31,16 @@
         -:   29: * to read more than 64K on a 16-bit machine.
         -:   30: */
         -:   31:void /* PRIVATE */
-     2586:   32:png_read_data(png_structrp png_ptr, png_bytep data, png_size_t length)
+    20106:   32:png_read_data(png_structrp png_ptr, png_bytep data, png_size_t length)
         -:   33:{
         -:   34:   png_debug1(4, "reading %d bytes", (int)length);
         -:   35:
-     2586:   36:   if (png_ptr->read_data_fn != NULL)
-     2586:   37:      (*(png_ptr->read_data_fn))(png_ptr, data, length);
+    20106:   36:   if (png_ptr->read_data_fn != NULL)
+    20106:   37:      (*(png_ptr->read_data_fn))(png_ptr, data, length);
         -:   38:
         -:   39:   else
     #####:   40:      png_error(png_ptr, "Call to NULL read function");
-     2583:   41:}
+    20103:   41:}
         -:   42:
         -:   43:#ifdef PNG_STDIO_SUPPORTED
         -:   44:/* This is the function that does the actual reading of data.  If you are
@@ -49,19 +49,19 @@
         -:   47: * than changing the library.
         -:   48: */
         -:   49:void PNGCBAPI
-     2586:   50:png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
+    20106:   50:png_default_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
         -:   51:{
         -:   52:   png_size_t check;
         -:   53:
-     2586:   54:   if (png_ptr == NULL)
+    20106:   54:   if (png_ptr == NULL)
     #####:   55:      return;
         -:   56:
         -:   57:   /* fread() returns 0 on error, so it is OK to store this in a png_size_t
         -:   58:    * instead of an int, which is what fread() actually returns.
         -:   59:    */
-     2586:   60:   check = fread(data, 1, length, png_voidcast(png_FILE_p, png_ptr->io_ptr));
+    20106:   60:   check = fread(data, 1, length, png_voidcast(png_FILE_p, png_ptr->io_ptr));
         -:   61:
-     2586:   62:   if (check != length)
+    20106:   62:   if (check != length)
         3:   63:      png_error(png_ptr, "Read Error");
         -:   64:}
         -:   65:#endif
@@ -86,27 +86,27 @@
         -:   84: *                be used.
         -:   85: */
         -:   86:void PNGAPI
-       24:   87:png_set_read_fn(png_structrp png_ptr, png_voidp io_ptr,
+      228:   87:png_set_read_fn(png_structrp png_ptr, png_voidp io_ptr,
         -:   88:    png_rw_ptr read_data_fn)
         -:   89:{
-       24:   90:   if (png_ptr == NULL)
+      228:   90:   if (png_ptr == NULL)
     #####:   91:      return;
         -:   92:
-       24:   93:   png_ptr->io_ptr = io_ptr;
+      228:   93:   png_ptr->io_ptr = io_ptr;
         -:   94:
         -:   95:#ifdef PNG_STDIO_SUPPORTED
-       24:   96:   if (read_data_fn != NULL)
+      228:   96:   if (read_data_fn != NULL)
     #####:   97:      png_ptr->read_data_fn = read_data_fn;
         -:   98:
         -:   99:   else
-       24:  100:      png_ptr->read_data_fn = png_default_read_data;
+      228:  100:      png_ptr->read_data_fn = png_default_read_data;
         -:  101:#else
         -:  102:   png_ptr->read_data_fn = read_data_fn;
         -:  103:#endif
         -:  104:
         -:  105:#ifdef PNG_WRITE_SUPPORTED
         -:  106:   /* It is an error to write to a read device */
-       24:  107:   if (png_ptr->write_data_fn != NULL)
+      228:  107:   if (png_ptr->write_data_fn != NULL)
         -:  108:   {
     #####:  109:      png_ptr->write_data_fn = NULL;
     #####:  110:      png_warning(png_ptr,
@@ -116,7 +116,7 @@
         -:  114:#endif
         -:  115:
         -:  116:#ifdef PNG_WRITE_FLUSH_SUPPORTED
-       24:  117:   png_ptr->output_flush_fn = NULL;
+      228:  117:   png_ptr->output_flush_fn = NULL;
         -:  118:#endif
         -:  119:}
         -:  120:#endif /* READ */

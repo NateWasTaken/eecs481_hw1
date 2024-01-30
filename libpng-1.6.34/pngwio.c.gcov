@@ -32,16 +32,16 @@
         -:   30: */
         -:   31:
         -:   32:void /* PRIVATE */
-     2613:   33:png_write_data(png_structrp png_ptr, png_const_bytep data, png_size_t length)
+    23847:   33:png_write_data(png_structrp png_ptr, png_const_bytep data, png_size_t length)
         -:   34:{
         -:   35:   /* NOTE: write_data_fn must not change the buffer! */
-     2613:   36:   if (png_ptr->write_data_fn != NULL )
-     2613:   37:      (*(png_ptr->write_data_fn))(png_ptr, png_constcast(png_bytep,data),
+    23847:   36:   if (png_ptr->write_data_fn != NULL )
+    23847:   37:      (*(png_ptr->write_data_fn))(png_ptr, png_constcast(png_bytep,data),
         -:   38:          length);
         -:   39:
         -:   40:   else
     #####:   41:      png_error(png_ptr, "Call to NULL write function");
-     2613:   42:}
+    23847:   42:}
         -:   43:
         -:   44:#ifdef PNG_STDIO_SUPPORTED
         -:   45:/* This is the function that does the actual writing of data.  If you are
@@ -50,16 +50,16 @@
         -:   48: * than changing the library.
         -:   49: */
         -:   50:void PNGCBAPI
-     2613:   51:png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
+    23847:   51:png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
         -:   52:{
         -:   53:   png_size_t check;
         -:   54:
-     2613:   55:   if (png_ptr == NULL)
+    23847:   55:   if (png_ptr == NULL)
     #####:   56:      return;
         -:   57:
-     2613:   58:   check = fwrite(data, 1, length, (png_FILE_p)(png_ptr->io_ptr));
+    23847:   58:   check = fwrite(data, 1, length, (png_FILE_p)(png_ptr->io_ptr));
         -:   59:
-     2613:   60:   if (check != length)
+    23847:   60:   if (check != length)
     #####:   61:      png_error(png_ptr, "Write Error");
         -:   62:}
         -:   63:#endif
@@ -121,20 +121,20 @@
         -:  119: *                 *FILE structure.
         -:  120: */
         -:  121:void PNGAPI
-       18:  122:png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
+      171:  122:png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
         -:  123:    png_rw_ptr write_data_fn, png_flush_ptr output_flush_fn)
         -:  124:{
-       18:  125:   if (png_ptr == NULL)
+      171:  125:   if (png_ptr == NULL)
     #####:  126:      return;
         -:  127:
-       18:  128:   png_ptr->io_ptr = io_ptr;
+      171:  128:   png_ptr->io_ptr = io_ptr;
         -:  129:
         -:  130:#ifdef PNG_STDIO_SUPPORTED
-       18:  131:   if (write_data_fn != NULL)
+      171:  131:   if (write_data_fn != NULL)
     #####:  132:      png_ptr->write_data_fn = write_data_fn;
         -:  133:
         -:  134:   else
-       18:  135:      png_ptr->write_data_fn = png_default_write_data;
+      171:  135:      png_ptr->write_data_fn = png_default_write_data;
         -:  136:#else
         -:  137:   png_ptr->write_data_fn = write_data_fn;
         -:  138:#endif
@@ -142,11 +142,11 @@
         -:  140:#ifdef PNG_WRITE_FLUSH_SUPPORTED
         -:  141:#  ifdef PNG_STDIO_SUPPORTED
         -:  142:
-       18:  143:   if (output_flush_fn != NULL)
+      171:  143:   if (output_flush_fn != NULL)
     #####:  144:      png_ptr->output_flush_fn = output_flush_fn;
         -:  145:
         -:  146:   else
-       18:  147:      png_ptr->output_flush_fn = png_default_flush;
+      171:  147:      png_ptr->output_flush_fn = png_default_flush;
         -:  148:
         -:  149:#  else
         -:  150:   png_ptr->output_flush_fn = output_flush_fn;
@@ -157,7 +157,7 @@
         -:  155:
         -:  156:#ifdef PNG_READ_SUPPORTED
         -:  157:   /* It is an error to read while writing a png file */
-       18:  158:   if (png_ptr->read_data_fn != NULL)
+      171:  158:   if (png_ptr->read_data_fn != NULL)
         -:  159:   {
     #####:  160:      png_ptr->read_data_fn = NULL;
         -:  161:
