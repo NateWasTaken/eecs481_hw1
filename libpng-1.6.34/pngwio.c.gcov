@@ -1,0 +1,170 @@
+        -:    0:Source:pngwio.c
+        -:    0:Programs:15
+        -:    1:
+        -:    2:/* pngwio.c - functions for data output
+        -:    3: *
+        -:    4: * Last changed in libpng 1.6.24 [August 4, 2016]
+        -:    5: * Copyright (c) 1998-2002,2004,2006-2014,2016 Glenn Randers-Pehrson
+        -:    6: * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
+        -:    7: * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
+        -:    8: *
+        -:    9: * This code is released under the libpng license.
+        -:   10: * For conditions of distribution and use, see the disclaimer
+        -:   11: * and license in png.h
+        -:   12: *
+        -:   13: * This file provides a location for all output.  Users who need
+        -:   14: * special handling are expected to write functions that have the same
+        -:   15: * arguments as these and perform similar functions, but that possibly
+        -:   16: * use different output methods.  Note that you shouldn't change these
+        -:   17: * functions, but rather write replacement functions and then change
+        -:   18: * them at run time with png_set_write_fn(...).
+        -:   19: */
+        -:   20:
+        -:   21:#include "pngpriv.h"
+        -:   22:
+        -:   23:#ifdef PNG_WRITE_SUPPORTED
+        -:   24:
+        -:   25:/* Write the data to whatever output you are using.  The default routine
+        -:   26: * writes to a file pointer.  Note that this routine sometimes gets called
+        -:   27: * with very small lengths, so you should implement some kind of simple
+        -:   28: * buffering if you are using unbuffered writes.  This should never be asked
+        -:   29: * to write more than 64K on a 16-bit machine.
+        -:   30: */
+        -:   31:
+        -:   32:void /* PRIVATE */
+     2613:   33:png_write_data(png_structrp png_ptr, png_const_bytep data, png_size_t length)
+        -:   34:{
+        -:   35:   /* NOTE: write_data_fn must not change the buffer! */
+     2613:   36:   if (png_ptr->write_data_fn != NULL )
+     2613:   37:      (*(png_ptr->write_data_fn))(png_ptr, png_constcast(png_bytep,data),
+        -:   38:          length);
+        -:   39:
+        -:   40:   else
+    #####:   41:      png_error(png_ptr, "Call to NULL write function");
+     2613:   42:}
+        -:   43:
+        -:   44:#ifdef PNG_STDIO_SUPPORTED
+        -:   45:/* This is the function that does the actual writing of data.  If you are
+        -:   46: * not writing to a standard C stream, you should create a replacement
+        -:   47: * write_data function and use it at run time with png_set_write_fn(), rather
+        -:   48: * than changing the library.
+        -:   49: */
+        -:   50:void PNGCBAPI
+     2613:   51:png_default_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
+        -:   52:{
+        -:   53:   png_size_t check;
+        -:   54:
+     2613:   55:   if (png_ptr == NULL)
+    #####:   56:      return;
+        -:   57:
+     2613:   58:   check = fwrite(data, 1, length, (png_FILE_p)(png_ptr->io_ptr));
+        -:   59:
+     2613:   60:   if (check != length)
+    #####:   61:      png_error(png_ptr, "Write Error");
+        -:   62:}
+        -:   63:#endif
+        -:   64:
+        -:   65:/* This function is called to output any data pending writing (normally
+        -:   66: * to disk).  After png_flush is called, there should be no data pending
+        -:   67: * writing in any buffers.
+        -:   68: */
+        -:   69:#ifdef PNG_WRITE_FLUSH_SUPPORTED
+        -:   70:void /* PRIVATE */
+    #####:   71:png_flush(png_structrp png_ptr)
+        -:   72:{
+    #####:   73:   if (png_ptr->output_flush_fn != NULL)
+    #####:   74:      (*(png_ptr->output_flush_fn))(png_ptr);
+    #####:   75:}
+        -:   76:
+        -:   77:#  ifdef PNG_STDIO_SUPPORTED
+        -:   78:void PNGCBAPI
+    #####:   79:png_default_flush(png_structp png_ptr)
+        -:   80:{
+        -:   81:   png_FILE_p io_ptr;
+        -:   82:
+    #####:   83:   if (png_ptr == NULL)
+    #####:   84:      return;
+        -:   85:
+    #####:   86:   io_ptr = png_voidcast(png_FILE_p, (png_ptr->io_ptr));
+    #####:   87:   fflush(io_ptr);
+        -:   88:}
+        -:   89:#  endif
+        -:   90:#endif
+        -:   91:
+        -:   92:/* This function allows the application to supply new output functions for
+        -:   93: * libpng if standard C streams aren't being used.
+        -:   94: *
+        -:   95: * This function takes as its arguments:
+        -:   96: * png_ptr       - pointer to a png output data structure
+        -:   97: * io_ptr        - pointer to user supplied structure containing info about
+        -:   98: *                 the output functions.  May be NULL.
+        -:   99: * write_data_fn - pointer to a new output function that takes as its
+        -:  100: *                 arguments a pointer to a png_struct, a pointer to
+        -:  101: *                 data to be written, and a 32-bit unsigned int that is
+        -:  102: *                 the number of bytes to be written.  The new write
+        -:  103: *                 function should call png_error(png_ptr, "Error msg")
+        -:  104: *                 to exit and output any fatal error messages.  May be
+        -:  105: *                 NULL, in which case libpng's default function will
+        -:  106: *                 be used.
+        -:  107: * flush_data_fn - pointer to a new flush function that takes as its
+        -:  108: *                 arguments a pointer to a png_struct.  After a call to
+        -:  109: *                 the flush function, there should be no data in any buffers
+        -:  110: *                 or pending transmission.  If the output method doesn't do
+        -:  111: *                 any buffering of output, a function prototype must still be
+        -:  112: *                 supplied although it doesn't have to do anything.  If
+        -:  113: *                 PNG_WRITE_FLUSH_SUPPORTED is not defined at libpng compile
+        -:  114: *                 time, output_flush_fn will be ignored, although it must be
+        -:  115: *                 supplied for compatibility.  May be NULL, in which case
+        -:  116: *                 libpng's default function will be used, if
+        -:  117: *                 PNG_WRITE_FLUSH_SUPPORTED is defined.  This is not
+        -:  118: *                 a good idea if io_ptr does not point to a standard
+        -:  119: *                 *FILE structure.
+        -:  120: */
+        -:  121:void PNGAPI
+       18:  122:png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
+        -:  123:    png_rw_ptr write_data_fn, png_flush_ptr output_flush_fn)
+        -:  124:{
+       18:  125:   if (png_ptr == NULL)
+    #####:  126:      return;
+        -:  127:
+       18:  128:   png_ptr->io_ptr = io_ptr;
+        -:  129:
+        -:  130:#ifdef PNG_STDIO_SUPPORTED
+       18:  131:   if (write_data_fn != NULL)
+    #####:  132:      png_ptr->write_data_fn = write_data_fn;
+        -:  133:
+        -:  134:   else
+       18:  135:      png_ptr->write_data_fn = png_default_write_data;
+        -:  136:#else
+        -:  137:   png_ptr->write_data_fn = write_data_fn;
+        -:  138:#endif
+        -:  139:
+        -:  140:#ifdef PNG_WRITE_FLUSH_SUPPORTED
+        -:  141:#  ifdef PNG_STDIO_SUPPORTED
+        -:  142:
+       18:  143:   if (output_flush_fn != NULL)
+    #####:  144:      png_ptr->output_flush_fn = output_flush_fn;
+        -:  145:
+        -:  146:   else
+       18:  147:      png_ptr->output_flush_fn = png_default_flush;
+        -:  148:
+        -:  149:#  else
+        -:  150:   png_ptr->output_flush_fn = output_flush_fn;
+        -:  151:#  endif
+        -:  152:#else
+        -:  153:   PNG_UNUSED(output_flush_fn)
+        -:  154:#endif /* WRITE_FLUSH */
+        -:  155:
+        -:  156:#ifdef PNG_READ_SUPPORTED
+        -:  157:   /* It is an error to read while writing a png file */
+       18:  158:   if (png_ptr->read_data_fn != NULL)
+        -:  159:   {
+    #####:  160:      png_ptr->read_data_fn = NULL;
+        -:  161:
+    #####:  162:      png_warning(png_ptr,
+        -:  163:          "Can't set both read_data_fn and write_data_fn in the"
+        -:  164:          " same structure");
+        -:  165:   }
+        -:  166:#endif
+        -:  167:}
+        -:  168:#endif /* WRITE */
