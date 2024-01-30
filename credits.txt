@@ -1,0 +1,3 @@
+test cases 1-12 were found on this forum post:
+
+https://stackoverflow.com/questions/3955680/how-to-check-if-my-avl-tree-implementation-is-correct
