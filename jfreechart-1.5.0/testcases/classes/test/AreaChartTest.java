@@ -106,8 +106,8 @@ public class AreaChartTest {
      * Check that setting a tool tip generator for a series does override the
      * default generator.
      */
-    public static void testSetSeriesToolTipGenerator() {
-        CategoryPlot plot = (CategoryPlot) getPlot();
+    public void testSetSeriesToolTipGenerator() {
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
                 = new StandardCategoryToolTipGenerator();
@@ -120,7 +120,7 @@ public class AreaChartTest {
      * default generator.
      */
     public static void testSetSeriesURLGenerator() {
-        CategoryPlot plot = (CategoryPlot) getPlot();
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
                 = new StandardCategoryURLGenerator();
