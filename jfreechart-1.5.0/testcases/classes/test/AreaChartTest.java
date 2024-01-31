@@ -184,8 +184,8 @@ public class AreaChartTest {
      * @throws IOException if there is an input/output problem.
      */
     public static void main(String[] args) throws IOException {
-        //PieDataset dataset = createDataset();
-        JFreeChart chart = createAreaChart(dataset); 
+        JFreeChart chart = createAreaChart(); 
+        chart.testReplaceDataset()
 
         // we need to layout the legend to know how much space it requires
         // note that it is also possible to call arrange() with some
