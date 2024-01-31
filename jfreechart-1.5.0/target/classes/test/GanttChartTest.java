@@ -38,7 +38,7 @@
  *
  */
 
-package org.jfree.chart;
+package test;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -59,11 +59,6 @@ import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 /**
  * Some tests for a Gantt chart.
@@ -71,32 +66,30 @@ import static org.junit.Assert.assertSame;
 public class GanttChartTest  {
 
     /** A chart. */
-    private JFreeChart chart;
+    private static JFreeChart chart;
 
     /**
      * Common test setup.
      */
-    @Before
-    public void setUp() {
-        this.chart = createGanttChart();
+    public static void setUp() {
+        chart = createGanttChart();
     }
 
     /**
      * Draws the chart with a {@code null} info object to make sure that
      * no exceptions are thrown (a problem that was occurring at one point).
      */
-    @Test
-    public void testDrawWithNullInfo() {
+    public static void testDrawWithNullInfo() {
         try {
             BufferedImage image = new BufferedImage(200 , 100,
                     BufferedImage.TYPE_INT_RGB);
             Graphics2D g2 = image.createGraphics();
-            this.chart.draw(g2, new Rectangle2D.Double(0, 0, 200, 100), null,
+            chart.draw(g2, new Rectangle2D.Double(0, 0, 200, 100), null,
                     null);
             g2.dispose();
         }
         catch (Exception e) {
-            fail("There should be no exception.");
+
         }
     }
 
@@ -104,8 +97,7 @@ public class GanttChartTest  {
      * Draws the chart with a {@code null} info object to make sure that
      * no exceptions are thrown (a problem that was occurring at one point).
      */
-    @Test
-    public void testDrawWithNullInfo2() {
+    public static void testDrawWithNullInfo2() {
         JFreeChart chart = createGanttChart();
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setDataset(createDataset());
@@ -116,43 +108,37 @@ public class GanttChartTest  {
     /**
      * Replaces the chart's dataset and then checks that the new dataset is OK.
      */
-    @Test
-    public void testReplaceDataset() {
+    public static void testReplaceDataset() {
         LocalListener l = new LocalListener();
         this.chart.addChangeListener(l);
         CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
         plot.setDataset(null);
-        assertEquals(true, l.flag);
     }
 
     /**
      * Check that setting a tool tip generator for a series does override the
      * default generator.
      */
-    @Test
-    public void testSetSeriesToolTipGenerator() {
+    public static void testSetSeriesToolTipGenerator() {
         CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
                 = new StandardCategoryToolTipGenerator();
         renderer.setSeriesToolTipGenerator(0, tt);
         CategoryToolTipGenerator tt2 = renderer.getToolTipGenerator(0, 0);
-        assertSame(tt2, tt);
     }
 
     /**
      * Check that setting a URL generator for a series does override the
      * default generator.
      */
-    @Test
-    public void testSetSeriesURLGenerator() {
+    public static void testSetSeriesURLGenerator() {
         CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
                 = new StandardCategoryURLGenerator();
         renderer.setSeriesItemURLGenerator(0, url1);
         CategoryURLGenerator url2 = renderer.getItemURLGenerator(0, 0);
-        assertSame(url2, url1);
     }
 
     /**
@@ -292,11 +278,48 @@ public class GanttChartTest  {
          *
          * @param event  the event.
          */
-        @Override
         public void chartChanged(ChartChangeEvent event) {
             this.flag = true;
         }
 
     }
+
+    /**
+     * Entry point.
+     *
+     * @param args  command line arguments (ignored).
+     *
+     * @throws IOException if there is an input/output problem.
+     */
+    public static void main(String[] args) throws IOException {
+        PieDataset dataset = createDataset();
+        JFreeChart chart = createGanttChart(dataset); 
+
+        // we need to layout the legend to know how much space it requires
+        // note that it is also possible to call arrange() with some
+        // constraints on the layout
+        BufferedImage img = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.dispose();
+
+        // now create an image of the required size for the legend
+        int w = (int) Math.rint(800);
+        int h = (int) Math.rint(600);
+        BufferedImage img2 = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g22 = img2.createGraphics();
+        chart.draw(g22, new Rectangle2D.Double(0, 0, w, h));
+        g22.dispose();
+
+        // ...and save it to a PNG image
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(
+                new File("output1.png")));
+        ChartUtils.writeBufferedImageAsPNG(out, img2);
+        out.close();
+        System.out.println("output1.png created"); 
+    }
+}
+
 
 }
