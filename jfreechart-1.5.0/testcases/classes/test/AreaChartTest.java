@@ -119,7 +119,7 @@ public class AreaChartTest {
      * Check that setting a URL generator for a series does override the
      * default generator.
      */
-    public static void testSetSeriesURLGenerator() {
+    public void testSetSeriesURLGenerator() {
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
@@ -132,7 +132,7 @@ public class AreaChartTest {
      * Draws the chart with a null info object to make sure that no exceptions
      * are thrown (a problem that was occurring at one point).
      */
-    public static void testDrawWithNullInfo() {
+    public void testDrawWithNullInfo() {
         BufferedImage image = new BufferedImage(200 , 100,
                 BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = image.createGraphics();
@@ -144,7 +144,7 @@ public class AreaChartTest {
     /**
      * Replaces the chart's dataset and then checks that the new dataset is OK.
      */
-    public static void testReplaceDataset() {
+    public void testReplaceDataset() {
         Number[][] data = new Integer[][]
             {{new Integer(-30), new Integer(-20)},
              {new Integer(-10), new Integer(10)},
