@@ -169,8 +169,6 @@ public class AreaChartTest {
 
     }
 
-}
-
     /**
      * Entry point.
      *
@@ -206,4 +204,7 @@ public class AreaChartTest {
         out.close();
         System.out.println("output1.png created"); 
     }
+
 }
+
+
