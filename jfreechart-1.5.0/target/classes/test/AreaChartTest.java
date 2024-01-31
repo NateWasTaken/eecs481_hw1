@@ -144,7 +144,7 @@ public class AreaChartTest {
     /**
      * Replaces the chart's dataset and then checks that the new dataset is OK.
      */
-    public void testReplaceDataset() {
+    public static void testReplaceDataset() {
         Number[][] data = new Integer[][]
             {{new Integer(-30), new Integer(-20)},
              {new Integer(-10), new Integer(10)},
@@ -185,7 +185,6 @@ public class AreaChartTest {
      */
     public static void main(String[] args) throws IOException {
         JFreeChart chart = createAreaChart(); 
-        testReplaceDataset();
 
         // we need to layout the legend to know how much space it requires
         // note that it is also possible to call arrange() with some
