@@ -93,7 +93,7 @@ import org.jfree.data.Range;
 public class AreaChartTest {
 
     /** A chart. */
-    private JFreeChart chart;
+    private static JFreeChart chart;
 
     /**
      * Common test setup.
@@ -106,7 +106,7 @@ public class AreaChartTest {
      * Check that setting a tool tip generator for a series does override the
      * default generator.
      */
-    public void testSetSeriesToolTipGenerator() {
+    public static void testSetSeriesToolTipGenerator() {
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
@@ -119,7 +119,7 @@ public class AreaChartTest {
      * Check that setting a URL generator for a series does override the
      * default generator.
      */
-    public void testSetSeriesURLGenerator() {
+    public static void testSetSeriesURLGenerator() {
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
@@ -132,7 +132,7 @@ public class AreaChartTest {
      * Draws the chart with a null info object to make sure that no exceptions
      * are thrown (a problem that was occurring at one point).
      */
-    public void testDrawWithNullInfo() {
+    public static void testDrawWithNullInfo() {
         BufferedImage image = new BufferedImage(200 , 100,
                 BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = image.createGraphics();
