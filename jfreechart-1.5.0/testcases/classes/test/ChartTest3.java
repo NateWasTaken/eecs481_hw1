@@ -49,7 +49,7 @@ import org.jfree.data.Range;
 * Here we save a legend to a PNG file...the legend has a lot of items, so we
 * apply a width constraint so it doesn't get too wide.
 */
-public class ChartTest1 {
+public class ChartTest3 {
 
   private static JFreeChart createChart(PieDataset dataset) {
 
