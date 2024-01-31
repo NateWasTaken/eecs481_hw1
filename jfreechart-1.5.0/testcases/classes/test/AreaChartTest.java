@@ -57,6 +57,35 @@ import org.jfree.chart.urls.StandardCategoryURLGenerator;
 import org.jfree.data.Range;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtils;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.GradientPaint;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.Point;
+import java.awt.RadialGradientPaint;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import org.jfree.chart.block.RectangleConstraint;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.ui.ApplicationFrame;
+import org.jfree.chart.ui.HorizontalAlignment;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.chart.ui.RectangleInsets;
+import org.jfree.chart.ui.UIUtils;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.data.Range;
 
 /**
  * Tests for an area chart.
@@ -70,7 +99,7 @@ public class AreaChartTest {
      * Common test setup.
      */
     public static void setUp() {
-        this.chart = createAreaChart();
+        chart = createAreaChart();
     }
 
     /**
@@ -78,7 +107,7 @@ public class AreaChartTest {
      * default generator.
      */
     public static void testSetSeriesToolTipGenerator() {
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
                 = new StandardCategoryToolTipGenerator();
@@ -91,7 +120,7 @@ public class AreaChartTest {
      * default generator.
      */
     public static void testSetSeriesURLGenerator() {
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
                 = new StandardCategoryURLGenerator();
@@ -107,7 +136,7 @@ public class AreaChartTest {
         BufferedImage image = new BufferedImage(200 , 100,
                 BufferedImage.TYPE_INT_RGB);
         Graphics2D g2 = image.createGraphics();
-        this.chart.draw(g2, new Rectangle2D.Double(0, 0, 200, 100), null,
+        chart.draw(g2, new Rectangle2D.Double(0, 0, 200, 100), null,
                 null);
         g2.dispose();
     }
@@ -124,8 +153,8 @@ public class AreaChartTest {
         CategoryDataset newData = DatasetUtils.createCategoryDataset(
                 "S", "C", data);
         LocalListener l = new LocalListener();
-        this.chart.addChangeListener(l);
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        chart.addChangeListener(l);
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setDataset(newData);
         ValueAxis axis = plot.getRangeAxis();
         Range range = axis.getRange();
@@ -164,7 +193,7 @@ public class AreaChartTest {
          */
         @Override
         public void chartChanged(ChartChangeEvent event) {
-            this.flag = true;
+            flag = true;
         }
 
     }
