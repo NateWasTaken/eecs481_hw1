@@ -99,7 +99,7 @@ public class AreaChartTest {
      * Common test setup.
      */
     public static void setUp() {
-        chart = createAreaChart();
+        createAreaChart();
     }
 
     /**
@@ -107,7 +107,7 @@ public class AreaChartTest {
      * default generator.
      */
     public static void testSetSeriesToolTipGenerator() {
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
                 = new StandardCategoryToolTipGenerator();
@@ -120,7 +120,7 @@ public class AreaChartTest {
      * default generator.
      */
     public static void testSetSeriesURLGenerator() {
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
                 = new StandardCategoryURLGenerator();
@@ -152,8 +152,6 @@ public class AreaChartTest {
 
         CategoryDataset newData = DatasetUtils.createCategoryDataset(
                 "S", "C", data);
-        LocalListener l = new LocalListener();
-        chart.addChangeListener(l);
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setDataset(newData);
         ValueAxis axis = plot.getRangeAxis();
@@ -175,26 +173,6 @@ public class AreaChartTest {
                 "C", data);
         return ChartFactory.createAreaChart("Area Chart", "Domain", "Range",
                 dataset, PlotOrientation.HORIZONTAL, true, true, true);
-
-    }
-
-    /**
-     * A chart change listener.
-     */
-    static class LocalListener implements ChartChangeListener {
-
-        /** A flag. */
-        private boolean flag;
-
-        /**
-         * Event handler.
-         *
-         * @param event  the event.
-         */
-        @Override
-        public void chartChanged(ChartChangeEvent event) {
-            flag = true;
-        }
 
     }
 
