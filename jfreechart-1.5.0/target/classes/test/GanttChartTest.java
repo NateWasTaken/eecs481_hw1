@@ -139,8 +139,8 @@ public class GanttChartTest  {
      */
     public static void testReplaceDataset() {
         LocalListener l = new LocalListener();
-        this.chart.addChangeListener(l);
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        chart.addChangeListener(l);
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setDataset(null);
     }
 
@@ -149,7 +149,7 @@ public class GanttChartTest  {
      * default generator.
      */
     public static void testSetSeriesToolTipGenerator() {
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
                 = new StandardCategoryToolTipGenerator();
@@ -162,7 +162,7 @@ public class GanttChartTest  {
      * default generator.
      */
     public static void testSetSeriesURLGenerator() {
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
                 = new StandardCategoryURLGenerator();
@@ -308,7 +308,7 @@ public class GanttChartTest  {
          * @param event  the event.
          */
         public void chartChanged(ChartChangeEvent event) {
-            this.flag = true;
+            flag = true;
         }
 
     }
@@ -321,7 +321,7 @@ public class GanttChartTest  {
      * @throws IOException if there is an input/output problem.
      */
     public static void main(String[] args) throws IOException {
-        PieDataset dataset = createDataset();
+        IntervalCategoryDataset dataset = createDataset();
         JFreeChart chart = createGanttChart(dataset); 
 
         // we need to layout the legend to know how much space it requires
