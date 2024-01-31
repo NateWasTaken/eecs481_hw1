@@ -192,16 +192,39 @@ public class PieChartDemo1 extends ApplicationFrame {
     }
 
     /**
-     * Starting point for the demonstration application.
+     * Entry point.
      *
-     * @param args  ignored.
+     * @param args  command line arguments (ignored).
+     *
+     * @throws IOException if there is an input/output problem.
      */
-    public static void main(String[] args) {
-        PieChartDemo1 demo = new PieChartDemo1("JFreeChart: Pie Chart Demo 1");
-        demo.pack();
-        UIUtils.centerFrameOnScreen(demo);
-        demo.setVisible(true);
-    }
+    public static void main(String[] args) throws IOException {
+        PieDataset dataset = createDataset();
+        JFreeChart chart = createChart(dataset); 
 
+        // we need to layout the legend to know how much space it requires
+        // note that it is also possible to call arrange() with some
+        // constraints on the layout
+        BufferedImage img = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.dispose();
+
+        // now create an image of the required size for the legend
+        int w = (int) Math.rint(800);
+        int h = (int) Math.rint(600);
+        BufferedImage img2 = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g22 = img2.createGraphics();
+        chart.draw(g22, new Rectangle2D.Double(0, 0, w, h));
+        g22.dispose();
+
+        // ...and save it to a PNG image
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(
+                new File("output1.png")));
+        ChartUtils.writeBufferedImageAsPNG(out, img2);
+        out.close();
+        System.out.println("output1.png created"); 
+    }
 }
 
