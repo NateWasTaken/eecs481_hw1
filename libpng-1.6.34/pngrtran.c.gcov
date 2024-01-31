@@ -1061,16 +1061,16 @@
         -: 1059:#if defined(PNG_READ_USER_TRANSFORM_SUPPORTED) || \
         -: 1060:    defined(PNG_WRITE_USER_TRANSFORM_SUPPORTED)
         -: 1061:void PNGAPI
-      171: 1062:png_set_read_user_transform_fn(png_structrp png_ptr, png_user_transform_ptr
+      183: 1062:png_set_read_user_transform_fn(png_structrp png_ptr, png_user_transform_ptr
         -: 1063:    read_user_transform_fn)
         -: 1064:{
         -: 1065:   png_debug(1, "in png_set_read_user_transform_fn");
         -: 1066:
         -: 1067:#ifdef PNG_READ_USER_TRANSFORM_SUPPORTED
-      171: 1068:   png_ptr->transformations |= PNG_USER_TRANSFORM;
-      171: 1069:   png_ptr->read_user_transform_fn = read_user_transform_fn;
+      183: 1068:   png_ptr->transformations |= PNG_USER_TRANSFORM;
+      183: 1069:   png_ptr->read_user_transform_fn = read_user_transform_fn;
         -: 1070:#endif
-      171: 1071:}
+      183: 1071:}
         -: 1072:#endif
         -: 1073:
         -: 1074:#ifdef PNG_READ_TRANSFORMS_SUPPORTED
@@ -1105,7 +1105,7 @@
         -: 1103: * extracted from 'png_init_read_transformations'.
         -: 1104: */
         -: 1105:static void /* PRIVATE */
-       81: 1106:png_init_palette_transformations(png_structrp png_ptr)
+       51: 1106:png_init_palette_transformations(png_structrp png_ptr)
         -: 1107:{
         -: 1108:   /* Called to handle the (input) palette case.  In png_do_read_transformations
         -: 1109:    * the first step is to expand the palette if requested, so this code must
@@ -1115,41 +1115,41 @@
         -: 1113:    * STRIP_ALPHA has already been handled in the caller (by setting num_trans
         -: 1114:    * to 0.)
         -: 1115:    */
-       81: 1116:   int input_has_alpha = 0;
-       81: 1117:   int input_has_transparency = 0;
+       51: 1116:   int input_has_alpha = 0;
+       51: 1117:   int input_has_transparency = 0;
         -: 1118:
-       81: 1119:   if (png_ptr->num_trans > 0)
+       51: 1119:   if (png_ptr->num_trans > 0)
         -: 1120:   {
         -: 1121:      int i;
         -: 1122:
         -: 1123:      /* Ignore if all the entries are opaque (unlikely!) */
-      774: 1124:      for (i=0; i<png_ptr->num_trans; ++i)
+      762: 1124:      for (i=0; i<png_ptr->num_trans; ++i)
         -: 1125:      {
-      771: 1126:         if (png_ptr->trans_alpha[i] == 255)
+      759: 1126:         if (png_ptr->trans_alpha[i] == 255)
       729: 1127:            continue;
-       42: 1128:         else if (png_ptr->trans_alpha[i] == 0)
-       21: 1129:            input_has_transparency = 1;
+       30: 1128:         else if (png_ptr->trans_alpha[i] == 0)
+       15: 1129:            input_has_transparency = 1;
         -: 1130:         else
         -: 1131:         {
-       21: 1132:            input_has_transparency = 1;
-       21: 1133:            input_has_alpha = 1;
-       21: 1134:            break;
+       15: 1132:            input_has_transparency = 1;
+       15: 1133:            input_has_alpha = 1;
+       15: 1134:            break;
         -: 1135:         }
         -: 1136:      }
         -: 1137:   }
         -: 1138:
         -: 1139:   /* If no alpha we can optimize. */
-       81: 1140:   if (input_has_alpha == 0)
+       51: 1140:   if (input_has_alpha == 0)
         -: 1141:   {
         -: 1142:      /* Any alpha means background and associative alpha processing is
         -: 1143:       * required, however if the alpha is 0 or 1 throughout OPTIMIZE_ALPHA
         -: 1144:       * and ENCODE_ALPHA are irrelevant.
         -: 1145:       */
-       60: 1146:      png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
-       60: 1147:      png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
+       36: 1146:      png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
+       36: 1147:      png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
         -: 1148:
-       60: 1149:      if (input_has_transparency == 0)
-       57: 1150:         png_ptr->transformations &= ~(PNG_COMPOSE | PNG_BACKGROUND_EXPAND);
+       36: 1149:      if (input_has_transparency == 0)
+       33: 1150:         png_ptr->transformations &= ~(PNG_COMPOSE | PNG_BACKGROUND_EXPAND);
         -: 1151:   }
         -: 1152:
         -: 1153:#if defined(PNG_READ_EXPAND_SUPPORTED) && defined(PNG_READ_BACKGROUND_SUPPORTED)
@@ -1161,7 +1161,7 @@
         -: 1159:   /* The following code cannot be entered in the alpha pre-multiplication case
         -: 1160:    * because PNG_BACKGROUND_EXPAND is cancelled below.
         -: 1161:    */
-       81: 1162:   if ((png_ptr->transformations & PNG_BACKGROUND_EXPAND) != 0 &&
+       51: 1162:   if ((png_ptr->transformations & PNG_BACKGROUND_EXPAND) != 0 &&
     #####: 1163:       (png_ptr->transformations & PNG_EXPAND) != 0)
         -: 1164:   {
         -: 1165:      {
@@ -1191,32 +1191,32 @@
         -: 1189:      }
         -: 1190:   } /* background expand and (therefore) no alpha association. */
         -: 1191:#endif /* READ_EXPAND && READ_BACKGROUND */
-       81: 1192:}
+       51: 1192:}
         -: 1193:
         -: 1194:static void /* PRIVATE */
-       69: 1195:png_init_rgb_transformations(png_structrp png_ptr)
+       72: 1195:png_init_rgb_transformations(png_structrp png_ptr)
         -: 1196:{
         -: 1197:   /* Added to libpng-1.5.4: check the color type to determine whether there
         -: 1198:    * is any alpha or transparency in the image and simply cancel the
         -: 1199:    * background and alpha mode stuff if there isn't.
         -: 1200:    */
-       69: 1201:   int input_has_alpha = (png_ptr->color_type & PNG_COLOR_MASK_ALPHA) != 0;
-       69: 1202:   int input_has_transparency = png_ptr->num_trans > 0;
+       72: 1201:   int input_has_alpha = (png_ptr->color_type & PNG_COLOR_MASK_ALPHA) != 0;
+       72: 1202:   int input_has_transparency = png_ptr->num_trans > 0;
         -: 1203:
         -: 1204:   /* If no alpha we can optimize. */
-       69: 1205:   if (input_has_alpha == 0)
+       72: 1205:   if (input_has_alpha == 0)
         -: 1206:   {
         -: 1207:      /* Any alpha means background and associative alpha processing is
         -: 1208:       * required, however if the alpha is 0 or 1 throughout OPTIMIZE_ALPHA
         -: 1209:       * and ENCODE_ALPHA are irrelevant.
         -: 1210:       */
         -: 1211:#     ifdef PNG_READ_ALPHA_MODE_SUPPORTED
-    #####: 1212:         png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
-    #####: 1213:         png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
+       18: 1212:         png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
+       18: 1213:         png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
         -: 1214:#     endif
         -: 1215:
-    #####: 1216:      if (input_has_transparency == 0)
-    #####: 1217:         png_ptr->transformations &= ~(PNG_COMPOSE | PNG_BACKGROUND_EXPAND);
+       18: 1216:      if (input_has_transparency == 0)
+       18: 1217:         png_ptr->transformations &= ~(PNG_COMPOSE | PNG_BACKGROUND_EXPAND);
         -: 1218:   }
         -: 1219:
         -: 1220:#if defined(PNG_READ_EXPAND_SUPPORTED) && defined(PNG_READ_BACKGROUND_SUPPORTED)
@@ -1228,7 +1228,7 @@
         -: 1226:   /* The following code cannot be entered in the alpha pre-multiplication case
         -: 1227:    * because PNG_BACKGROUND_EXPAND is cancelled below.
         -: 1228:    */
-       69: 1229:   if ((png_ptr->transformations & PNG_BACKGROUND_EXPAND) != 0 &&
+       72: 1229:   if ((png_ptr->transformations & PNG_BACKGROUND_EXPAND) != 0 &&
     #####: 1230:       (png_ptr->transformations & PNG_EXPAND) != 0 &&
     #####: 1231:       (png_ptr->color_type & PNG_COLOR_MASK_COLOR) == 0)
         -: 1232:       /* i.e., GRAY or GRAY_ALPHA */
@@ -1276,10 +1276,10 @@
         -: 1274:      }
         -: 1275:   } /* background expand and (therefore) no alpha association. */
         -: 1276:#endif /* READ_EXPAND && READ_BACKGROUND */
-       69: 1277:}
+       72: 1277:}
         -: 1278:
         -: 1279:void /* PRIVATE */
-      150: 1280:png_init_read_transformations(png_structrp png_ptr)
+      123: 1280:png_init_read_transformations(png_structrp png_ptr)
         -: 1281:{
         -: 1282:   png_debug(1, "in png_init_read_transformations");
         -: 1283:
@@ -1302,11 +1302,11 @@
         -: 1300:      /* The following temporary indicates if overall gamma correction is
         -: 1301:       * required.
         -: 1302:       */
-      150: 1303:      int gamma_correction = 0;
+      123: 1303:      int gamma_correction = 0;
         -: 1304:
-      150: 1305:      if (png_ptr->colorspace.gamma != 0) /* has been set */
+      123: 1305:      if (png_ptr->colorspace.gamma != 0) /* has been set */
         -: 1306:      {
-       54: 1307:         if (png_ptr->screen_gamma != 0) /* screen set too */
+       51: 1307:         if (png_ptr->screen_gamma != 0) /* screen set too */
     #####: 1308:            gamma_correction = png_gamma_threshold(png_ptr->colorspace.gamma,
         -: 1309:                png_ptr->screen_gamma);
         -: 1310:
@@ -1314,10 +1314,10 @@
         -: 1312:            /* Assume the output matches the input; a long time default behavior
         -: 1313:             * of libpng, although the standard has nothing to say about this.
         -: 1314:             */
-       54: 1315:            png_ptr->screen_gamma = png_reciprocal(png_ptr->colorspace.gamma);
+       51: 1315:            png_ptr->screen_gamma = png_reciprocal(png_ptr->colorspace.gamma);
         -: 1316:      }
         -: 1317:
-       96: 1318:      else if (png_ptr->screen_gamma != 0)
+       72: 1318:      else if (png_ptr->screen_gamma != 0)
         -: 1319:         /* The converse - assume the file matches the screen, note that this
         -: 1320:          * perhaps undesireable default can (from 1.5.4) be changed by calling
         -: 1321:          * png_set_alpha_mode (even if the alpha handling mode isn't required
@@ -1331,10 +1331,10 @@
         -: 1329:          * third gamma value other than png_set_background with 'UNIQUE', and,
         -: 1330:          * prior to 1.5.4
         -: 1331:          */
-       96: 1332:         png_ptr->screen_gamma = png_ptr->colorspace.gamma = PNG_FP_1;
+       72: 1332:         png_ptr->screen_gamma = png_ptr->colorspace.gamma = PNG_FP_1;
         -: 1333:
         -: 1334:      /* We have a gamma value now. */
-      150: 1335:      png_ptr->colorspace.flags |= PNG_COLORSPACE_HAVE_GAMMA;
+      123: 1335:      png_ptr->colorspace.flags |= PNG_COLORSPACE_HAVE_GAMMA;
         -: 1336:
         -: 1337:      /* Now turn the gamma transformation on or off as appropriate.  Notice
         -: 1338:       * that PNG_GAMMA just refers to the file->screen correction.  Alpha
@@ -1344,11 +1344,11 @@
         -: 1342:       * the code immediately below if the transform can be handled outside the
         -: 1343:       * row loop.
         -: 1344:       */
-      150: 1345:      if (gamma_correction != 0)
+      123: 1345:      if (gamma_correction != 0)
     #####: 1346:         png_ptr->transformations |= PNG_GAMMA;
         -: 1347:
         -: 1348:      else
-      150: 1349:         png_ptr->transformations &= ~PNG_GAMMA;
+      123: 1349:         png_ptr->transformations &= ~PNG_GAMMA;
         -: 1350:   }
         -: 1351:#endif
         -: 1352:
@@ -1382,7 +1382,7 @@
         -: 1380:    * 23) PNG_USER_TRANSFORM [must be last]
         -: 1381:    */
         -: 1382:#ifdef PNG_READ_STRIP_ALPHA_SUPPORTED
-      150: 1383:   if ((png_ptr->transformations & PNG_STRIP_ALPHA) != 0 &&
+      123: 1383:   if ((png_ptr->transformations & PNG_STRIP_ALPHA) != 0 &&
     #####: 1384:       (png_ptr->transformations & PNG_COMPOSE) == 0)
         -: 1385:   {
         -: 1386:      /* Stripping the alpha channel happens immediately after the 'expand'
@@ -1409,10 +1409,10 @@
         -: 1407:   /* If the screen gamma is about 1.0 then the OPTIMIZE_ALPHA and ENCODE_ALPHA
         -: 1408:    * settings will have no effect.
         -: 1409:    */
-      150: 1410:   if (png_gamma_significant(png_ptr->screen_gamma) == 0)
+      123: 1410:   if (png_gamma_significant(png_ptr->screen_gamma) == 0)
         -: 1411:   {
-       99: 1412:      png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
-       99: 1413:      png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
+       78: 1412:      png_ptr->transformations &= ~PNG_ENCODE_ALPHA;
+       78: 1413:      png_ptr->flags &= ~PNG_FLAG_OPTIMIZE_ALPHA;
         -: 1414:   }
         -: 1415:#endif
         -: 1416:
@@ -1420,7 +1420,7 @@
         -: 1418:   /* Make sure the coefficients for the rgb to gray conversion are set
         -: 1419:    * appropriately.
         -: 1420:    */
-      150: 1421:   if ((png_ptr->transformations & PNG_RGB_TO_GRAY) != 0)
+      123: 1421:   if ((png_ptr->transformations & PNG_RGB_TO_GRAY) != 0)
     #####: 1422:      png_colorspace_set_rgb_coefficients(png_ptr);
         -: 1423:#endif
         -: 1424:
@@ -1441,7 +1441,7 @@
         -: 1439:    * png_set_background, along with the bit depth, then the code has a record
         -: 1440:    * of exactly what color space the background is currently in.
         -: 1441:    */
-      150: 1442:   if ((png_ptr->transformations & PNG_BACKGROUND_EXPAND) != 0)
+      123: 1442:   if ((png_ptr->transformations & PNG_BACKGROUND_EXPAND) != 0)
         -: 1443:   {
         -: 1444:      /* PNG_BACKGROUND_EXPAND: the background is in the file color space, so if
         -: 1445:       * the file was grayscale the background value is gray.
@@ -1450,7 +1450,7 @@
     #####: 1448:         png_ptr->mode |= PNG_BACKGROUND_IS_GRAY;
         -: 1449:   }
         -: 1450:
-      150: 1451:   else if ((png_ptr->transformations & PNG_COMPOSE) != 0)
+      123: 1451:   else if ((png_ptr->transformations & PNG_COMPOSE) != 0)
         -: 1452:   {
         -: 1453:      /* PNG_COMPOSE: png_set_background was called with need_expand false,
         -: 1454:       * so the color is in the color space of the output or png_set_alpha_mode
@@ -1481,15 +1481,15 @@
         -: 1479:    * leads to the reported bug that the palette returned by png_get_PLTE is not
         -: 1480:    * updated.
         -: 1481:    */
-      150: 1482:   if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
-       81: 1483:      png_init_palette_transformations(png_ptr);
+      123: 1482:   if (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
+       51: 1483:      png_init_palette_transformations(png_ptr);
         -: 1484:
         -: 1485:   else
-       69: 1486:      png_init_rgb_transformations(png_ptr);
+       72: 1486:      png_init_rgb_transformations(png_ptr);
         -: 1487:
         -: 1488:#if defined(PNG_READ_BACKGROUND_SUPPORTED) && \
         -: 1489:   defined(PNG_READ_EXPAND_16_SUPPORTED)
-      150: 1490:   if ((png_ptr->transformations & PNG_EXPAND_16) != 0 &&
+      123: 1490:   if ((png_ptr->transformations & PNG_EXPAND_16) != 0 &&
     #####: 1491:       (png_ptr->transformations & PNG_COMPOSE) != 0 &&
     #####: 1492:       (png_ptr->transformations & PNG_BACKGROUND_EXPAND) == 0 &&
     #####: 1493:       png_ptr->bit_depth != 16)
@@ -1516,7 +1516,7 @@
         -: 1514:#if defined(PNG_READ_BACKGROUND_SUPPORTED) && \
         -: 1515:   (defined(PNG_READ_SCALE_16_TO_8_SUPPORTED) || \
         -: 1516:   defined(PNG_READ_STRIP_16_TO_8_SUPPORTED))
-      150: 1517:   if ((png_ptr->transformations & (PNG_16_TO_8|PNG_SCALE_16_TO_8)) != 0 &&
+      123: 1517:   if ((png_ptr->transformations & (PNG_16_TO_8|PNG_SCALE_16_TO_8)) != 0 &&
     #####: 1518:       (png_ptr->transformations & PNG_COMPOSE) != 0 &&
     #####: 1519:       (png_ptr->transformations & PNG_BACKGROUND_EXPAND) == 0 &&
     #####: 1520:       png_ptr->bit_depth == 16)
@@ -1546,7 +1546,7 @@
         -: 1544:#ifdef PNG_READ_GAMMA_SUPPORTED
         -: 1545:#  ifdef PNG_READ_BACKGROUND_SUPPORTED
         -: 1546:      /* Includes ALPHA_MODE */
-      150: 1547:      png_ptr->background_1 = png_ptr->background;
+      123: 1547:      png_ptr->background_1 = png_ptr->background;
         -: 1548:#  endif
         -: 1549:
         -: 1550:   /* This needs to change - in the palette image case a whole set of tables are
@@ -1562,18 +1562,18 @@
         -: 1560:    * file gamma - if it is not 1.0 both RGB_TO_GRAY and COMPOSE need the
         -: 1561:    * tables.
         -: 1562:    */
-      300: 1563:   if ((png_ptr->transformations & PNG_GAMMA) != 0 ||
-      150: 1564:       ((png_ptr->transformations & PNG_RGB_TO_GRAY) != 0 &&
+      246: 1563:   if ((png_ptr->transformations & PNG_GAMMA) != 0 ||
+      123: 1564:       ((png_ptr->transformations & PNG_RGB_TO_GRAY) != 0 &&
     #####: 1565:        (png_gamma_significant(png_ptr->colorspace.gamma) != 0 ||
-      150: 1566:         png_gamma_significant(png_ptr->screen_gamma) != 0)) ||
-      150: 1567:        ((png_ptr->transformations & PNG_COMPOSE) != 0 &&
+      123: 1566:         png_gamma_significant(png_ptr->screen_gamma) != 0)) ||
+      123: 1567:        ((png_ptr->transformations & PNG_COMPOSE) != 0 &&
     #####: 1568:         (png_gamma_significant(png_ptr->colorspace.gamma) != 0 ||
     #####: 1569:          png_gamma_significant(png_ptr->screen_gamma) != 0
         -: 1570:#  ifdef PNG_READ_BACKGROUND_SUPPORTED
     #####: 1571:         || (png_ptr->background_gamma_type == PNG_BACKGROUND_GAMMA_UNIQUE &&
     #####: 1572:           png_gamma_significant(png_ptr->background_gamma) != 0)
         -: 1573:#  endif
-      150: 1574:        )) || ((png_ptr->transformations & PNG_ENCODE_ALPHA) != 0 &&
+      123: 1574:        )) || ((png_ptr->transformations & PNG_ENCODE_ALPHA) != 0 &&
     #####: 1575:       png_gamma_significant(png_ptr->screen_gamma) != 0))
         -: 1576:   {
     #####: 1577:      png_build_gamma_table(png_ptr, png_ptr->bit_depth);
@@ -1839,7 +1839,7 @@
         -: 1837:
         -: 1838:#ifdef PNG_READ_BACKGROUND_SUPPORTED
         -: 1839:   /* No GAMMA transformation (see the hanging else 4 lines above) */
-      150: 1840:   if ((png_ptr->transformations & PNG_COMPOSE) != 0 &&
+      123: 1840:   if ((png_ptr->transformations & PNG_COMPOSE) != 0 &&
     #####: 1841:       (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE))
         -: 1842:   {
         -: 1843:      int i;
@@ -1877,7 +1877,7 @@
         -: 1875:#endif /* READ_BACKGROUND */
         -: 1876:
         -: 1877:#ifdef PNG_READ_SHIFT_SUPPORTED
-      150: 1878:   if ((png_ptr->transformations & PNG_SHIFT) != 0 &&
+      123: 1878:   if ((png_ptr->transformations & PNG_SHIFT) != 0 &&
     #####: 1879:       (png_ptr->transformations & PNG_EXPAND) == 0 &&
     #####: 1880:       (png_ptr->color_type == PNG_COLOR_TYPE_PALETTE))
         -: 1881:   {
@@ -1921,7 +1921,7 @@
         -: 1919:         }
         -: 1920:   }
         -: 1921:#endif /* READ_SHIFT */
-      150: 1922:}
+      123: 1922:}
         -: 1923:
         -: 1924:/* Modify the info structure to reflect the transformations.  The
         -: 1925: * info should be updated so a PNG file could be written with it,
@@ -4716,11 +4716,11 @@
         -: 4714: * decide how it fits in with the other transformations here.
         -: 4715: */
         -: 4716:void /* PRIVATE */
-   132570: 4717:png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
+   138276: 4717:png_do_read_transformations(png_structrp png_ptr, png_row_infop row_info)
         -: 4718:{
         -: 4719:   png_debug(1, "in png_do_read_transformations");
         -: 4720:
-   132570: 4721:   if (png_ptr->row_buf == NULL)
+   138276: 4721:   if (png_ptr->row_buf == NULL)
         -: 4722:   {
         -: 4723:      /* Prior to 1.5.4 this output row/pass where the NULL pointer is, but this
         -: 4724:       * error is incredibly rare and incredibly easy to debug without this
@@ -4735,7 +4735,7 @@
         -: 4733:    * all transformations, however in practice the ROW_INIT always gets done on
         -: 4734:    * demand, if necessary.
         -: 4735:    */
-   132570: 4736:   if ((png_ptr->flags & PNG_FLAG_DETECT_UNINITIALIZED) != 0 &&
+   138276: 4736:   if ((png_ptr->flags & PNG_FLAG_DETECT_UNINITIALIZED) != 0 &&
     #####: 4737:       (png_ptr->flags & PNG_FLAG_ROW_INIT) == 0)
         -: 4738:   {
         -: 4739:      /* Application has failed to call either png_read_start_image() or
@@ -4746,7 +4746,7 @@
         -: 4744:   }
         -: 4745:
         -: 4746:#ifdef PNG_READ_EXPAND_SUPPORTED
-   132570: 4747:   if ((png_ptr->transformations & PNG_EXPAND) != 0)
+   138276: 4747:   if ((png_ptr->transformations & PNG_EXPAND) != 0)
         -: 4748:   {
     #####: 4749:      if (row_info->color_type == PNG_COLOR_TYPE_PALETTE)
         -: 4750:      {
@@ -4769,7 +4769,7 @@
         -: 4767:#endif
         -: 4768:
         -: 4769:#ifdef PNG_READ_STRIP_ALPHA_SUPPORTED
-   132570: 4770:   if ((png_ptr->transformations & PNG_STRIP_ALPHA) != 0 &&
+   138276: 4770:   if ((png_ptr->transformations & PNG_STRIP_ALPHA) != 0 &&
     #####: 4771:       (png_ptr->transformations & PNG_COMPOSE) == 0 &&
     #####: 4772:       (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA ||
     #####: 4773:       row_info->color_type == PNG_COLOR_TYPE_GRAY_ALPHA))
@@ -4778,7 +4778,7 @@
         -: 4776:#endif
         -: 4777:
         -: 4778:#ifdef PNG_READ_RGB_TO_GRAY_SUPPORTED
-   132570: 4779:   if ((png_ptr->transformations & PNG_RGB_TO_GRAY) != 0)
+   138276: 4779:   if ((png_ptr->transformations & PNG_RGB_TO_GRAY) != 0)
         -: 4780:   {
     #####: 4781:      int rgb_error =
     #####: 4782:          png_do_rgb_to_gray(png_ptr, row_info,
@@ -4833,19 +4833,19 @@
         -: 4831:   /* If gray -> RGB, do so now only if background is non-gray; else do later
         -: 4832:    * for performance reasons
         -: 4833:    */
-   132570: 4834:   if ((png_ptr->transformations & PNG_GRAY_TO_RGB) != 0 &&
+   138276: 4834:   if ((png_ptr->transformations & PNG_GRAY_TO_RGB) != 0 &&
     #####: 4835:       (png_ptr->mode & PNG_BACKGROUND_IS_GRAY) == 0)
     #####: 4836:      png_do_gray_to_rgb(row_info, png_ptr->row_buf + 1);
         -: 4837:#endif
         -: 4838:
         -: 4839:#if defined(PNG_READ_BACKGROUND_SUPPORTED) ||\
         -: 4840:   defined(PNG_READ_ALPHA_MODE_SUPPORTED)
-   132570: 4841:   if ((png_ptr->transformations & PNG_COMPOSE) != 0)
+   138276: 4841:   if ((png_ptr->transformations & PNG_COMPOSE) != 0)
     #####: 4842:      png_do_compose(row_info, png_ptr->row_buf + 1, png_ptr);
         -: 4843:#endif
         -: 4844:
         -: 4845:#ifdef PNG_READ_GAMMA_SUPPORTED
-   132570: 4846:   if ((png_ptr->transformations & PNG_GAMMA) != 0 &&
+   138276: 4846:   if ((png_ptr->transformations & PNG_GAMMA) != 0 &&
         -: 4847:#ifdef PNG_READ_RGB_TO_GRAY_SUPPORTED
         -: 4848:      /* Because RGB_TO_GRAY does the gamma transform. */
     #####: 4849:      (png_ptr->transformations & PNG_RGB_TO_GRAY) == 0 &&
@@ -4867,7 +4867,7 @@
         -: 4865:#endif
         -: 4866:
         -: 4867:#ifdef PNG_READ_STRIP_ALPHA_SUPPORTED
-   132570: 4868:   if ((png_ptr->transformations & PNG_STRIP_ALPHA) != 0 &&
+   138276: 4868:   if ((png_ptr->transformations & PNG_STRIP_ALPHA) != 0 &&
     #####: 4869:       (png_ptr->transformations & PNG_COMPOSE) != 0 &&
     #####: 4870:       (row_info->color_type == PNG_COLOR_TYPE_RGB_ALPHA ||
     #####: 4871:       row_info->color_type == PNG_COLOR_TYPE_GRAY_ALPHA))
@@ -4876,13 +4876,13 @@
         -: 4874:#endif
         -: 4875:
         -: 4876:#ifdef PNG_READ_ALPHA_MODE_SUPPORTED
-   132570: 4877:   if ((png_ptr->transformations & PNG_ENCODE_ALPHA) != 0 &&
+   138276: 4877:   if ((png_ptr->transformations & PNG_ENCODE_ALPHA) != 0 &&
     #####: 4878:       (row_info->color_type & PNG_COLOR_MASK_ALPHA) != 0)
     #####: 4879:      png_do_encode_alpha(row_info, png_ptr->row_buf + 1, png_ptr);
         -: 4880:#endif
         -: 4881:
         -: 4882:#ifdef PNG_READ_SCALE_16_TO_8_SUPPORTED
-   132570: 4883:   if ((png_ptr->transformations & PNG_SCALE_16_TO_8) != 0)
+   138276: 4883:   if ((png_ptr->transformations & PNG_SCALE_16_TO_8) != 0)
     #####: 4884:      png_do_scale_16_to_8(row_info, png_ptr->row_buf + 1);
         -: 4885:#endif
         -: 4886:
@@ -4891,12 +4891,12 @@
         -: 4889:    * by putting the 'scale' option first if the app asks for scale (either by
         -: 4890:    * calling the API or in a TRANSFORM flag) this is what happens.
         -: 4891:    */
-   132570: 4892:   if ((png_ptr->transformations & PNG_16_TO_8) != 0)
+   138276: 4892:   if ((png_ptr->transformations & PNG_16_TO_8) != 0)
     #####: 4893:      png_do_chop(row_info, png_ptr->row_buf + 1);
         -: 4894:#endif
         -: 4895:
         -: 4896:#ifdef PNG_READ_QUANTIZE_SUPPORTED
-   132570: 4897:   if ((png_ptr->transformations & PNG_QUANTIZE) != 0)
+   138276: 4897:   if ((png_ptr->transformations & PNG_QUANTIZE) != 0)
         -: 4898:   {
     #####: 4899:      png_do_quantize(row_info, png_ptr->row_buf + 1,
     #####: 4900:          png_ptr->palette_lookup, png_ptr->quantize_index);
@@ -4912,78 +4912,78 @@
         -: 4910:    * is efficient (particularly true in the case of gamma correction, where
         -: 4911:    * better accuracy results faster!)
         -: 4912:    */
-   132570: 4913:   if ((png_ptr->transformations & PNG_EXPAND_16) != 0)
+   138276: 4913:   if ((png_ptr->transformations & PNG_EXPAND_16) != 0)
     #####: 4914:      png_do_expand_16(row_info, png_ptr->row_buf + 1);
         -: 4915:#endif
         -: 4916:
         -: 4917:#ifdef PNG_READ_GRAY_TO_RGB_SUPPORTED
         -: 4918:   /* NOTE: moved here in 1.5.4 (from much later in this list.) */
-   132570: 4919:   if ((png_ptr->transformations & PNG_GRAY_TO_RGB) != 0 &&
+   138276: 4919:   if ((png_ptr->transformations & PNG_GRAY_TO_RGB) != 0 &&
     #####: 4920:       (png_ptr->mode & PNG_BACKGROUND_IS_GRAY) != 0)
     #####: 4921:      png_do_gray_to_rgb(row_info, png_ptr->row_buf + 1);
         -: 4922:#endif
         -: 4923:
         -: 4924:#ifdef PNG_READ_INVERT_SUPPORTED
-   132570: 4925:   if ((png_ptr->transformations & PNG_INVERT_MONO) != 0)
+   138276: 4925:   if ((png_ptr->transformations & PNG_INVERT_MONO) != 0)
     #####: 4926:      png_do_invert(row_info, png_ptr->row_buf + 1);
         -: 4927:#endif
         -: 4928:
         -: 4929:#ifdef PNG_READ_INVERT_ALPHA_SUPPORTED
-   132570: 4930:   if ((png_ptr->transformations & PNG_INVERT_ALPHA) != 0)
+   138276: 4930:   if ((png_ptr->transformations & PNG_INVERT_ALPHA) != 0)
     #####: 4931:      png_do_read_invert_alpha(row_info, png_ptr->row_buf + 1);
         -: 4932:#endif
         -: 4933:
         -: 4934:#ifdef PNG_READ_SHIFT_SUPPORTED
-   132570: 4935:   if ((png_ptr->transformations & PNG_SHIFT) != 0)
+   138276: 4935:   if ((png_ptr->transformations & PNG_SHIFT) != 0)
     #####: 4936:      png_do_unshift(row_info, png_ptr->row_buf + 1,
     #####: 4937:          &(png_ptr->shift));
         -: 4938:#endif
         -: 4939:
         -: 4940:#ifdef PNG_READ_PACK_SUPPORTED
-   132570: 4941:   if ((png_ptr->transformations & PNG_PACK) != 0)
+   138276: 4941:   if ((png_ptr->transformations & PNG_PACK) != 0)
     #####: 4942:      png_do_unpack(row_info, png_ptr->row_buf + 1);
         -: 4943:#endif
         -: 4944:
         -: 4945:#ifdef PNG_READ_CHECK_FOR_INVALID_INDEX_SUPPORTED
         -: 4946:   /* Added at libpng-1.5.10 */
-   172440: 4947:   if (row_info->color_type == PNG_COLOR_TYPE_PALETTE &&
-    39870: 4948:       png_ptr->num_palette_max >= 0)
-    39870: 4949:      png_do_check_palette_indexes(png_ptr, row_info);
+   169872: 4947:   if (row_info->color_type == PNG_COLOR_TYPE_PALETTE &&
+    31596: 4948:       png_ptr->num_palette_max >= 0)
+    31596: 4949:      png_do_check_palette_indexes(png_ptr, row_info);
         -: 4950:#endif
         -: 4951:
         -: 4952:#ifdef PNG_READ_BGR_SUPPORTED
-   132570: 4953:   if ((png_ptr->transformations & PNG_BGR) != 0)
+   138276: 4953:   if ((png_ptr->transformations & PNG_BGR) != 0)
     #####: 4954:      png_do_bgr(row_info, png_ptr->row_buf + 1);
         -: 4955:#endif
         -: 4956:
         -: 4957:#ifdef PNG_READ_PACKSWAP_SUPPORTED
-   132570: 4958:   if ((png_ptr->transformations & PNG_PACKSWAP) != 0)
+   138276: 4958:   if ((png_ptr->transformations & PNG_PACKSWAP) != 0)
     #####: 4959:      png_do_packswap(row_info, png_ptr->row_buf + 1);
         -: 4960:#endif
         -: 4961:
         -: 4962:#ifdef PNG_READ_FILLER_SUPPORTED
-   132570: 4963:   if ((png_ptr->transformations & PNG_FILLER) != 0)
+   138276: 4963:   if ((png_ptr->transformations & PNG_FILLER) != 0)
     #####: 4964:      png_do_read_filler(row_info, png_ptr->row_buf + 1,
     #####: 4965:          (png_uint_32)png_ptr->filler, png_ptr->flags);
         -: 4966:#endif
         -: 4967:
         -: 4968:#ifdef PNG_READ_SWAP_ALPHA_SUPPORTED
-   132570: 4969:   if ((png_ptr->transformations & PNG_SWAP_ALPHA) != 0)
+   138276: 4969:   if ((png_ptr->transformations & PNG_SWAP_ALPHA) != 0)
     #####: 4970:      png_do_read_swap_alpha(row_info, png_ptr->row_buf + 1);
         -: 4971:#endif
         -: 4972:
         -: 4973:#ifdef PNG_READ_16BIT_SUPPORTED
         -: 4974:#ifdef PNG_READ_SWAP_SUPPORTED
-   132570: 4975:   if ((png_ptr->transformations & PNG_SWAP_BYTES) != 0)
+   138276: 4975:   if ((png_ptr->transformations & PNG_SWAP_BYTES) != 0)
     #####: 4976:      png_do_swap(row_info, png_ptr->row_buf + 1);
         -: 4977:#endif
         -: 4978:#endif
         -: 4979:
         -: 4980:#ifdef PNG_READ_USER_TRANSFORM_SUPPORTED
-   132570: 4981:   if ((png_ptr->transformations & PNG_USER_TRANSFORM) != 0)
+   138276: 4981:   if ((png_ptr->transformations & PNG_USER_TRANSFORM) != 0)
         -: 4982:   {
-   132570: 4983:      if (png_ptr->read_user_transform_fn != NULL)
-   265140: 4984:         (*(png_ptr->read_user_transform_fn)) /* User read transform function */
+   138276: 4983:      if (png_ptr->read_user_transform_fn != NULL)
+   276552: 4984:         (*(png_ptr->read_user_transform_fn)) /* User read transform function */
         -: 4985:             (png_ptr,     /* png_ptr */
         -: 4986:             row_info,     /* row_info: */
         -: 4987:                /*  png_uint_32 width;       width of row */
@@ -4992,21 +4992,21 @@
         -: 4990:                /*  png_byte bit_depth;      bit depth of samples */
         -: 4991:                /*  png_byte channels;       number of channels (1-4) */
         -: 4992:                /*  png_byte pixel_depth;    bits per pixel (depth*channels) */
-   132570: 4993:             png_ptr->row_buf + 1);    /* start of pixel data for row */
+   138276: 4993:             png_ptr->row_buf + 1);    /* start of pixel data for row */
         -: 4994:#ifdef PNG_USER_TRANSFORM_PTR_SUPPORTED
-   132570: 4995:      if (png_ptr->user_transform_depth != 0)
+   138276: 4995:      if (png_ptr->user_transform_depth != 0)
     #####: 4996:         row_info->bit_depth = png_ptr->user_transform_depth;
         -: 4997:
-   132570: 4998:      if (png_ptr->user_transform_channels != 0)
+   138276: 4998:      if (png_ptr->user_transform_channels != 0)
     #####: 4999:         row_info->channels = png_ptr->user_transform_channels;
         -: 5000:#endif
-   265140: 5001:      row_info->pixel_depth = (png_byte)(row_info->bit_depth *
-   132570: 5002:          row_info->channels);
+   276552: 5001:      row_info->pixel_depth = (png_byte)(row_info->bit_depth *
+   138276: 5002:          row_info->channels);
         -: 5003:
-   132570: 5004:      row_info->rowbytes = PNG_ROWBYTES(row_info->pixel_depth, row_info->width);
+   138276: 5004:      row_info->rowbytes = PNG_ROWBYTES(row_info->pixel_depth, row_info->width);
         -: 5005:   }
         -: 5006:#endif
-   132570: 5007:}
+   138276: 5007:}
         -: 5008:
         -: 5009:#endif /* READ_TRANSFORMS */
         -: 5010:#endif /* READ */

@@ -466,7 +466,7 @@ configure:13084: gcc -o conftest --coverage -static   conftest.c  >&5
 conftest.c:49:6: warning: conflicting types for built-in function 'pow'
  char pow ();
       ^
-/tmp/ccykmTWx.o: In function `main':
+/tmp/ccsiP8Ei.o: In function `main':
 conftest.c:(.text+0x1c): undefined reference to `pow'
 collect2: error: ld returned 1 exit status
 configure:13084: $? = 1
@@ -589,6 +589,7 @@ config.status:1135: creating Makefile
 config.status:1135: creating libpng.pc
 config.status:1135: creating libpng-config
 config.status:1135: creating config.h
+config.status:1316: config.h is unchanged
 config.status:1364: executing depfiles commands
 config.status:1364: executing libtool commands
 

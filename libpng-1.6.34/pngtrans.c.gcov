@@ -98,17 +98,17 @@
         -:   96:#if defined(PNG_READ_INTERLACING_SUPPORTED) || \
         -:   97:    defined(PNG_WRITE_INTERLACING_SUPPORTED)
         -:   98:int PNGAPI
-      300:   99:png_set_interlace_handling(png_structrp png_ptr)
+      246:   99:png_set_interlace_handling(png_structrp png_ptr)
         -:  100:{
         -:  101:   png_debug(1, "in png_set_interlace handling");
         -:  102:
-      300:  103:   if (png_ptr != 0 && png_ptr->interlaced != 0)
+      246:  103:   if (png_ptr != 0 && png_ptr->interlaced != 0)
         -:  104:   {
        24:  105:      png_ptr->transformations |= PNG_INTERLACE;
        24:  106:      return (7);
         -:  107:   }
         -:  108:
-      276:  109:   return (1);
+      222:  109:   return (1);
         -:  110:}
         -:  111:#endif
         -:  112:
@@ -698,10 +698,10 @@
         -:  696:    defined(PNG_WRITE_CHECK_FOR_INVALID_INDEX_SUPPORTED)
         -:  697:/* Added at libpng-1.5.10 */
         -:  698:void /* PRIVATE */
-    79740:  699:png_do_check_palette_indexes(png_structrp png_ptr, png_row_infop row_info)
+    63192:  699:png_do_check_palette_indexes(png_structrp png_ptr, png_row_infop row_info)
         -:  700:{
-   130422:  701:   if (png_ptr->num_palette < (1 << row_info->bit_depth) &&
-    50682:  702:      png_ptr->num_palette > 0) /* num_palette can be 0 in MNG files */
+    93720:  701:   if (png_ptr->num_palette < (1 << row_info->bit_depth) &&
+    30528:  702:      png_ptr->num_palette > 0) /* num_palette can be 0 in MNG files */
         -:  703:   {
         -:  704:      /* Calculations moved outside switch in an attempt to stop different
         -:  705:       * compiler warnings.  'padding' is in *bits* within the last byte, it is
@@ -709,10 +709,10 @@
         -:  707:       * and this calculation is used because it avoids warnings that other
         -:  708:       * forms produced on either GCC or MSVC.
         -:  709:       */
-    50682:  710:      int padding = PNG_PADBITS(row_info->pixel_depth, row_info->width);
-    50682:  711:      png_bytep rp = png_ptr->row_buf + row_info->rowbytes - 1;
+    30528:  710:      int padding = PNG_PADBITS(row_info->pixel_depth, row_info->width);
+    30528:  711:      png_bytep rp = png_ptr->row_buf + row_info->rowbytes - 1;
         -:  712:
-    50682:  713:      switch (row_info->bit_depth)
+    30528:  713:      switch (row_info->bit_depth)
         -:  714:      {
         -:  715:         case 1:
         -:  716:         {
@@ -761,40 +761,40 @@
         -:  759:
         -:  760:         case 4:
         -:  761:         {
-   608160:  762:            for (; rp > png_ptr->row_buf; rp--)
+   270000:  762:            for (; rp > png_ptr->row_buf; rp--)
         -:  763:            {
-   604248:  764:              int i = ((*rp >> padding) & 0x0f);
+   268200:  764:              int i = ((*rp >> padding) & 0x0f);
         -:  765:
-   604248:  766:              if (i > png_ptr->num_palette_max)
-       24:  767:                 png_ptr->num_palette_max = i;
+   268200:  766:              if (i > png_ptr->num_palette_max)
+       12:  767:                 png_ptr->num_palette_max = i;
         -:  768:
-   604248:  769:              i = (((*rp >> padding) >> 4) & 0x0f);
+   268200:  769:              i = (((*rp >> padding) >> 4) & 0x0f);
         -:  770:
-   604248:  771:              if (i > png_ptr->num_palette_max)
-       18:  772:                 png_ptr->num_palette_max = i;
+   268200:  771:              if (i > png_ptr->num_palette_max)
+    #####:  772:                 png_ptr->num_palette_max = i;
         -:  773:
-   604248:  774:              padding = 0;
+   268200:  774:              padding = 0;
         -:  775:            }
         -:  776:
-     3912:  777:            break;
+     1800:  777:            break;
         -:  778:         }
         -:  779:
         -:  780:         case 8:
         -:  781:         {
- 37192092:  782:            for (; rp > png_ptr->row_buf; rp--)
+ 30924240:  782:            for (; rp > png_ptr->row_buf; rp--)
         -:  783:            {
- 37145322:  784:               if (*rp > png_ptr->num_palette_max)
-      804:  785:                  png_ptr->num_palette_max = (int) *rp;
+ 30895512:  784:               if (*rp > png_ptr->num_palette_max)
+      492:  785:                  png_ptr->num_palette_max = (int) *rp;
         -:  786:            }
         -:  787:
-    46770:  788:            break;
+    28728:  788:            break;
         -:  789:         }
         -:  790:
         -:  791:         default:
     #####:  792:            break;
         -:  793:      }
         -:  794:   }
-    79740:  795:}
+    63192:  795:}
         -:  796:#endif /* CHECK_FOR_INVALID_INDEX */
         -:  797:
         -:  798:#if defined(PNG_READ_USER_TRANSFORM_SUPPORTED) || \
