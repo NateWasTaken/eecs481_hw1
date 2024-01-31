@@ -99,7 +99,7 @@ public class AreaChartTest {
      * Common test setup.
      */
     public static void setUp() {
-        createAreaChart();
+        chart = createAreaChart();
     }
 
     /**
