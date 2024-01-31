@@ -185,7 +185,7 @@ public class AreaChartTest {
      */
     public static void main(String[] args) throws IOException {
         JFreeChart chart = createAreaChart(); 
-        chart.testReplaceDataset();
+        testReplaceDataset();
 
         // we need to layout the legend to know how much space it requires
         // note that it is also possible to call arrange() with some
