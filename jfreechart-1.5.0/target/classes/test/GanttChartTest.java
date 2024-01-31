@@ -319,7 +319,5 @@ public class GanttChartTest  {
         out.close();
         System.out.println("output1.png created"); 
     }
-}
-
 
 }
