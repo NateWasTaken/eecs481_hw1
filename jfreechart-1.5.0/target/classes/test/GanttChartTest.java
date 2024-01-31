@@ -322,7 +322,7 @@ public class GanttChartTest  {
      */
     public static void main(String[] args) throws IOException {
         IntervalCategoryDataset dataset = createDataset();
-        JFreeChart chart = createGanttChart(dataset); 
+        JFreeChart chart = createGanttChart(); 
 
         // we need to layout the legend to know how much space it requires
         // note that it is also possible to call arrange() with some
