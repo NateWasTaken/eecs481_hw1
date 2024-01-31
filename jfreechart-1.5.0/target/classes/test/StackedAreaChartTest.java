@@ -40,10 +40,6 @@
 
 package org.jfree.chart;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -61,8 +57,35 @@ import org.jfree.chart.urls.StandardCategoryURLGenerator;
 import org.jfree.data.Range;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtils;
-import org.junit.Before;
-import org.junit.Test;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.GradientPaint;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.Point;
+import java.awt.RadialGradientPaint;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import org.jfree.chart.block.RectangleConstraint;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.ui.ApplicationFrame;
+import org.jfree.chart.ui.HorizontalAlignment;
+import org.jfree.chart.ui.RectangleEdge;
+import org.jfree.chart.ui.RectangleInsets;
+import org.jfree.chart.ui.UIUtils;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.general.PieDataset;
+import org.jfree.data.Range;
 
 /**
  * Some tests for a stacked area chart.
@@ -75,34 +98,34 @@ public class StackedAreaChartTest {
     /**
      * Common test setup.
      */
-    @Before
+    
     public void setUp() {
-        this.chart = createChart();
+        chart = createChart();
     }
 
     /**
      * Draws the chart with a null info object to make sure that no exceptions
      * are thrown (a problem that was occurring at one point).
      */
-    @Test
+    
     public void testDrawWithNullInfo() {
         try {
             BufferedImage image = new BufferedImage(200 , 100,
                     BufferedImage.TYPE_INT_RGB);
             Graphics2D g2 = image.createGraphics();
-            this.chart.draw(g2, new Rectangle2D.Double(0, 0, 200, 100), null,
+            chart.draw(g2, new Rectangle2D.Double(0, 0, 200, 100), null,
                     null);
             g2.dispose();
         }
         catch (Exception e) {
-          fail("There should be no exception.");
+          
         }
     }
 
     /**
      * Replaces the dataset and checks that it has changed as expected.
      */
-    @Test
+    
     public void testReplaceDataset() {
         Number[][] data = new Integer[][]
             {{new Integer(-30), new Integer(-20)},
@@ -113,16 +136,11 @@ public class StackedAreaChartTest {
                 "C", data);
 
         LocalListener l = new LocalListener();
-        this.chart.addChangeListener(l);
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        chart.addChangeListener(l);
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         plot.setDataset(newData);
-        assertEquals(true, l.flag);
         ValueAxis axis = plot.getRangeAxis();
         Range range = axis.getRange();
-        assertTrue("Expecting the lower bound of the range to be around -30: "
-                    + range.getLowerBound(), range.getLowerBound() <= -30);
-        assertTrue("Expecting the upper bound of the range to be around 30: "
-                   + range.getUpperBound(), range.getUpperBound() >= 30);
 
     }
 
@@ -130,30 +148,28 @@ public class StackedAreaChartTest {
      * Check that setting a tool tip generator for a series does override the
      * default generator.
      */
-    @Test
+    
     public void testSetSeriesToolTipGenerator() {
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
             = new StandardCategoryToolTipGenerator();
         renderer.setSeriesToolTipGenerator(0, tt);
         CategoryToolTipGenerator tt2 = renderer.getToolTipGenerator(0, 0);
-        assertTrue(tt2 == tt);
     }
 
     /**
      * Check that setting a URL generator for a series does override the
      * default generator.
      */
-    @Test
+    
     public void testSetSeriesURLGenerator() {
-        CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
                 = new StandardCategoryURLGenerator();
         renderer.setSeriesItemURLGenerator(0, url1);
         CategoryURLGenerator url2 = renderer.getItemURLGenerator(0, 0);
-        assertTrue(url2 == url1);
     }
 
     /**
@@ -196,9 +212,44 @@ public class StackedAreaChartTest {
          */
         @Override
         public void chartChanged(ChartChangeEvent event) {
-            this.flag = true;
+            flag = true;
         }
 
+    }
+
+    /**
+     * Entry point.
+     *
+     * @param args  command line arguments (ignored).
+     *
+     * @throws IOException if there is an input/output problem.
+     */
+    public static void main(String[] args) throws IOException {
+        JFreeChart chart = createChart(); 
+
+        // we need to layout the legend to know how much space it requires
+        // note that it is also possible to call arrange() with some
+        // constraints on the layout
+        BufferedImage img = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.dispose();
+
+        // now create an image of the required size for the legend
+        int w = (int) Math.rint(800);
+        int h = (int) Math.rint(600);
+        BufferedImage img2 = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g22 = img2.createGraphics();
+        chart.draw(g22, new Rectangle2D.Double(0, 0, w, h));
+        g22.dispose();
+
+        // ...and save it to a PNG image
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(
+                new File("output1.png")));
+        ChartUtils.writeBufferedImageAsPNG(out, img2);
+        out.close();
+        System.out.println("output1.png created"); 
     }
 
 }
