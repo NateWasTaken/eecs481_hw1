@@ -38,12 +38,7 @@
  *
  */
 
-package org.jfree.chart;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+package test;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -62,8 +57,6 @@ import org.jfree.chart.urls.StandardCategoryURLGenerator;
 import org.jfree.data.Range;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtils;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Tests for an area chart.
@@ -77,7 +70,7 @@ public class AreaChartTest {
      * Common test setup.
      */
     @Before
-    public void setUp() {
+    public static void setUp() {
         this.chart = createAreaChart();
     }
 
@@ -86,7 +79,7 @@ public class AreaChartTest {
      * default generator.
      */
     @Test
-    public void testSetSeriesToolTipGenerator() {
+    public static void testSetSeriesToolTipGenerator() {
         CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryToolTipGenerator tt
@@ -101,7 +94,7 @@ public class AreaChartTest {
      * default generator.
      */
     @Test
-    public void testSetSeriesURLGenerator() {
+    public static void testSetSeriesURLGenerator() {
         CategoryPlot plot = (CategoryPlot) this.chart.getPlot();
         CategoryItemRenderer renderer = plot.getRenderer();
         StandardCategoryURLGenerator url1
@@ -116,7 +109,7 @@ public class AreaChartTest {
      * are thrown (a problem that was occurring at one point).
      */
     @Test
-    public void testDrawWithNullInfo() {
+    public static void testDrawWithNullInfo() {
         try {
             BufferedImage image = new BufferedImage(200 , 100,
                     BufferedImage.TYPE_INT_RGB);
@@ -134,7 +127,7 @@ public class AreaChartTest {
      * Replaces the chart's dataset and then checks that the new dataset is OK.
      */
     @Test
-    public void testReplaceDataset() {
+    public static void testReplaceDataset() {
         Number[][] data = new Integer[][]
             {{new Integer(-30), new Integer(-20)},
              {new Integer(-10), new Integer(10)},
@@ -193,4 +186,41 @@ public class AreaChartTest {
 
     }
 
+}
+
+    /**
+     * Entry point.
+     *
+     * @param args  command line arguments (ignored).
+     *
+     * @throws IOException if there is an input/output problem.
+     */
+    public static void main(String[] args) throws IOException {
+        PieDataset dataset = createDataset();
+        JFreeChart chart = createChart(dataset); 
+
+        // we need to layout the legend to know how much space it requires
+        // note that it is also possible to call arrange() with some
+        // constraints on the layout
+        BufferedImage img = new BufferedImage(1, 1,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.dispose();
+
+        // now create an image of the required size for the legend
+        int w = (int) Math.rint(800);
+        int h = (int) Math.rint(600);
+        BufferedImage img2 = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g22 = img2.createGraphics();
+        chart.draw(g22, new Rectangle2D.Double(0, 0, w, h));
+        g22.dispose();
+
+        // ...and save it to a PNG image
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(
+                new File("output1.png")));
+        ChartUtils.writeBufferedImageAsPNG(out, img2);
+        out.close();
+        System.out.println("output1.png created"); 
+    }
 }
